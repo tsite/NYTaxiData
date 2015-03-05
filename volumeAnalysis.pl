@@ -39,7 +39,7 @@ chomp $line;
 $line =~ tr/"//d;
 my @spl=split(/,/, $line); #fields
 my @tmp=split(" ",$spl[1]); #hour
-$spl[0]=$spl[0]."\t".$tmp[1]; #rcid \t hour
+$spl[0]=$spl[0]."\t".$spl[2]."\t".$tmp[1]; #rcid \t direction \t hour
 if(!defined $rc{$spl[0]})
 {
 $rc{$spl[0]}=0;
@@ -51,7 +51,7 @@ if($.%1000000==0){say $.;} #progress
 }
 close($fh);
 }
-open($fh,">","rcid_hour_avg_volume.txt") or die("COULD NOT OPEN ");
+open($fh,">","rcid_hour_dir_avg_volume.txt") or die("COULD NOT OPEN ");
 foreach my $i(sort keys %rc)
 {
 say $fh $i."\t".$rc{$i}."\t".$c{$i}."\t".$rc{$i}/$c{$i};
