@@ -7,7 +7,7 @@ public class Node {
 	private double lon;
 	private double hval;
 	private double gval;
-	private double fval;
+	//private double fval;
 
 	public Node() {
 		id = 0;
@@ -15,7 +15,7 @@ public class Node {
 		lon = 0;
 		hval = 0;
 		gval = 0;
-		fval = 0;
+		//fval = 0;
 	}
 	
 	public Node(int id, double lat, double lon) {
@@ -24,7 +24,7 @@ public class Node {
 		this.lon = lon;
 		hval = 0;
 		gval = 0;
-		fval = 0;
+		//fval = 0;
 	}
 	
 	public Node(int id, double lat, double lon, double hval, double gval) {
@@ -33,7 +33,7 @@ public class Node {
 		this.lon = lon;
 		this.hval = hval;
 		this.gval = gval;
-		fval = gval + hval;
+		//fval = gval + hval;
 	}
 	
 	public int id() {
@@ -66,7 +66,7 @@ public class Node {
 	
 	public void setHval(double h) {
 		hval = h;
-		fval = hval + gval;
+		//fval = hval + gval;
 	}
 	
 	public double gval() {
@@ -75,11 +75,11 @@ public class Node {
 	
 	public void setGval(double g) {
 		gval = g;
-		fval = hval + gval;
+		//fval = hval + gval;
 	}
 	
 	public double fval() {
-		return fval;
+		return hval+gval;
 	}
 	
 	public boolean equals(Node rhs) {

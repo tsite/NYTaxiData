@@ -59,6 +59,10 @@ public class AStar {
 	public static double edgeLon2 = -74.021833;
 	public static double milesPerLat = 12.185089 / (edgeLat1 - edgeLat2);
 	public static double milesPerLon = 6.06893 / (edgeLon1 - edgeLon2);
+	public static int gridLat=1000; //100 should also work fine...large numbers eat up memory...
+	public static int gridLon=1000; //PROBLEM WITH THIS APPROACH: DEAL WITH POINTS ON GRID LINES. ADD EACH NODE TO THREE GRID SQUARES TO FIX.
+	public static ArrayDeque<Node>[][] grid=(ArrayDeque<Node>[][])new ArrayDeque[gridLat][gridLon];
+	public static double minlat=100,maxlat=-100,minlon=100,maxlon=-100;
 
 	
 
@@ -72,11 +76,26 @@ public class AStar {
 			System.out.println("Data file not found.");
 		}
 
-		Node[] nodeArray = new Node[maxID + 1];
+		//Node[] nodeArray = new Node[maxID + 1];
 		
 		for (Entry<Integer, Node> e : nodes.entrySet()) {
-			nodeArray[e.getValue().id()] = e.getValue();
+			//nodeArray[e.getValue().id()] = e.getValue();
+			Node e2=e.getValue();
+			if(e2.lat()<minlat)minlat=e2.lat();if(e2.lon()<minlon)minlon=e2.lon();
+			if(e2.lat()>maxlon)maxlat=e2.lat();if(e2.lon()>maxlon)maxlon=e2.lon();
 		}
+		System.out.println(minlat+" "+maxlat+" "+minlon+" "+maxlon);
+		for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)grid[i][j]=new ArrayDeque<Node>();
+		for (Entry<Integer, Node> e : nodes.entrySet()) {
+		Node e2=e.getValue();
+		int la=(int)(gridLat*(e2.lat()-minlat)/(1.+maxlat-minlat));
+		int lo=(int)(gridLon*(e2.lon()-minlon)/(1.+maxlon-minlon));
+		grid[la][lo].add(e2);
+		}
+		//int mx=0;
+		//for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
+		//System.out.println(mx);
+		//=>213 max nodes! very reasonable. can increase __ to decrease nodes.
 
 		//		System.out.println("~~~~~~~~~~~~~~~~ ALL NODES IN LIST OF NODES: ~~~~~~~~~~~~~~~~~");
 		//		for (Entry<Integer, Vector<Node>> i : map.entrySet()) {
@@ -109,7 +128,7 @@ public class AStar {
 					Node goal = nodes.get(g);
 					System.out.println("Destination node: " + goal.toString());
 
-					if (aStar(start, goal)) {
+					if (aStar(start, goal, 2*distance(start,goal)+2)) {
 						System.out.println("Optimal path:");
 						while (!solution.isEmpty()) {
 							Node cur = solution.pollFirst();
@@ -139,10 +158,14 @@ public class AStar {
 						PrintWriter output = new PrintWriter(new File(name + "_output.txt"));
 						input.nextLine();
 						int counter = 0;
+						long ss=System.currentTimeMillis();
 						while (input.hasNextLine()) {
+						//long s=System.currentTimeMillis();
 							++counter;
 							if (counter > 999 && counter%1000 == 0) {
 								System.out.println("Processed " + counter +" lines");
+								System.out.println("Time "+(System.currentTimeMillis()-ss));
+								ss=System.currentTimeMillis();
 							}
 							
 							String ride = input.nextLine();
@@ -151,6 +174,7 @@ public class AStar {
 							double lon1 = Double.parseDouble(data[10]);
 							double lat2 = Double.parseDouble(data[13]);
 							double lon2 = Double.parseDouble(data[12]);
+							double dist = Double.parseDouble(data[9]);
 
 							Node p = new Node(0, lat1, lon1);
 							Node d = new Node(0, lat2, lon2);
@@ -158,20 +182,31 @@ public class AStar {
 							Node curD = new Node();
 							boolean changed1 = false;
 							boolean changed2 = false;
-							for (Entry<Integer, Node> e : nodes.entrySet()) {
-								if (distance(p, curP) > distance(p, e.getValue())) {
-									curP = e.getValue();
+							//Entry<Integer,Node> e : 
+							int la1=(int)(gridLat*(lat1-minlat)/(1.+maxlat-minlat));
+							int lo1=(int)(gridLon*(lon1-minlon)/(1.+maxlon-minlon));
+							int la2=(int)(gridLat*(lat2-minlat)/(1.+maxlat-minlat));
+							int lo2=(int)(gridLon*(lon2-minlon)/(1.+maxlon-minlon));
+							if(la1<0 || la1>=gridLat || la2<0 || la2>=gridLat || lo1<0 || lo1>=gridLon || lo2<0 || lo2>=gridLon)
+							{System.out.println("BAAD LINE");output.println("MISS");}
+							else{
+							for (Node e2 : (ArrayDeque<Node>)grid[la1][lo1]) {
+								if (distance(p, curP) > distance(p, e2)) {
+									curP = e2;
 									if (!changed1) {
 										changed1 = true;
 									}
 								}
-								if (distance(d, curD) > distance(d, e.getValue())) {
-									curD = e.getValue();
+								}
+							for (Node e2 : (ArrayDeque<Node>)grid[la2][lo2]) {
+								if (distance(d, curD) > distance(d, e2)) {
+									curD = e2;
 									if (!changed2) {
 										changed2 = true;
 									}
 								}
-							}
+							}}
+							//if(changed1 && changed2)System.out.print((System.currentTimeMillis()-s)+" "+distance(curP,curD)+" ");
 //							for (int j = 0; j < maxID + 1; ++j) {
 //								if (nodeArray[j] != null) {
 //									if (distance(p, curP) > distance(p, nodeArray[j])) {
@@ -191,11 +226,13 @@ public class AStar {
 							if (changed1 && changed2) {
 //								System.out.println("Start node fit: " + curP.toString() + " Goal node fit: " + curD.toString());
 								
-								aStar(curP, curD);	
+								aStar(curP, curD, dist+.5);	
 							} else {
 								distance = 0;
 							}
 							output.println(distance);
+							//output.flush();
+							//System.out.println(System.currentTimeMillis()-s);
 						}
 						System.out.println(files[i] + " finished processing.");
 						input.close();
@@ -230,7 +267,7 @@ public class AStar {
 				}
 				double lon = Double.parseDouble(segs[1]);
 				double lat = Double.parseDouble(segs[2]);
-				if (lat < edgeLat1 && lat > edgeLat2 && lon < edgeLon1 && lon > edgeLon2) {
+				if (/*lat < edgeLat1 && lat > edgeLat2 && lon < edgeLon1 && lon > edgeLon2*/true) {
 					nodes.put(id, new Node(id, lat, lon));
 					map.put(id, new Vector<Node>());
 				}
@@ -251,6 +288,7 @@ public class AStar {
 					} else if (direction == 1) {
 						map.get(id).add(nodes.get(id2));
 					} else {
+					//System.out.println("abba");
 						map.get(id2).add(nodes.get(id));
 					}
 				}
@@ -260,7 +298,7 @@ public class AStar {
 	}
 
 
-	public static boolean aStar (Node start, Node goal) {
+	public static boolean aStar (Node start, Node goal, double dist) {
 
 		distance = 0;
 		solution.clear();
@@ -276,8 +314,8 @@ public class AStar {
 
 		PriorityQueue<Node> frontier = new PriorityQueue<Node>(1, guage);
 		frontier.add(start);
-
-		HashMap<Node, Node> path = new HashMap<Node, Node>();
+		//commenting out the path doesn't really same any time, but it can't hurt.
+//		HashMap<Node, Node> path = new HashMap<Node, Node>();
 
 
 		while (!frontier.isEmpty()) {
@@ -288,11 +326,11 @@ public class AStar {
 			//			System.out.println("Distance traveled: " + current.gval());
 			if (current.equals(goal)) {
 				distance = current.gval();
-				solution.addFirst(current);
-				while (!current.equals(start)) {
-					current = path.get(current);
-					solution.addFirst(current);
-				}
+//				solution.addFirst(current);
+//				while (!current.equals(start)) {
+//					current = path.get(current);
+//					solution.addFirst(current);
+//				}
 				//				solution.addFirst(start);
 				return true;
 			}
@@ -305,10 +343,10 @@ public class AStar {
 					double gtemp = current.gval() + distance(current, n);
 
 					if (!frontier.contains(n) || gtemp < n.gval()) {
-						path.put(n,  current);
+//						path.put(n,  current);
 						n.setGval(gtemp);
 						n.setHval(distance(n, goal));
-						if (!frontier.contains(n)) {
+						if (!frontier.contains(n) && n.fval()<=dist) {
 							frontier.add(n);
 						}
 					}	
