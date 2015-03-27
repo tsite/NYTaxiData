@@ -59,9 +59,10 @@ public class AStar {
 	public static double edgeLon2 = -74.021833;
 	public static double milesPerLat = 12.185089 / (edgeLat1 - edgeLat2);
 	public static double milesPerLon = 6.06893 / (edgeLon1 - edgeLon2);
-	public static int gridLat=1000; //100 should also work fine...large numbers eat up memory...
-	public static int gridLon=1000; //PROBLEM WITH THIS APPROACH: DEAL WITH POINTS ON GRID LINES. ADD EACH NODE TO THREE GRID SQUARES TO FIX.
+	public static int gridLat=1000; //increase this number to increase the speed
+	public static int gridLon=1000;
 	public static ArrayDeque<Node>[][] grid=(ArrayDeque<Node>[][])new ArrayDeque[gridLat][gridLon];
+	public static ArrayDeque<Node>[][] gex=(ArrayDeque<Node>[][])new ArrayDeque[gridLat][gridLon]; //slows the runtime a lot, 2-3x as slow, but necessary. can run on all four cores for 4x speed.
 	public static double minlat=100,maxlat=-100,minlon=100,maxlon=-100;
 
 	
@@ -85,17 +86,18 @@ public class AStar {
 			if(e2.lat()>maxlon)maxlat=e2.lat();if(e2.lon()>maxlon)maxlon=e2.lon();
 		}
 		System.out.println(minlat+" "+maxlat+" "+minlon+" "+maxlon);
-		for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)grid[i][j]=new ArrayDeque<Node>();
+		for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++){grid[i][j]=new ArrayDeque<Node>();gex[i][j]=new ArrayDeque<Node>();}
 		for (Entry<Integer, Node> e : nodes.entrySet()) {
 		Node e2=e.getValue();
 		int la=(int)(gridLat*(e2.lat()-minlat)/(1.+maxlat-minlat));
 		int lo=(int)(gridLon*(e2.lon()-minlon)/(1.+maxlon-minlon));
 		grid[la][lo].add(e2);
+		for(int i=-1;i<2;i++)for(int j=-1;j<2;j++)if((i!=0 || j!=0) && la+i>=0 && la+i<gridLat && lo+j>=0 && lo+j<=gridLon)gex[la+i][lo+j].add(e2);
 		}
-		//int mx=0;
-		//for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
-		//System.out.println(mx);
-		//=>213 max nodes! very reasonable. can increase __ to decrease nodes.
+		int mx=0;
+		for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
+		System.out.println(mx);
+		//=>515 max nodes (@1000 each)! very reasonable. can increase __ to decrease nodes.
 
 		//		System.out.println("~~~~~~~~~~~~~~~~ ALL NODES IN LIST OF NODES: ~~~~~~~~~~~~~~~~~");
 		//		for (Entry<Integer, Vector<Node>> i : map.entrySet()) {
@@ -198,7 +200,22 @@ public class AStar {
 									}
 								}
 								}
+							if(!changed1)for (Node e2 : (ArrayDeque<Node>)gex[la1][lo1]) {
+								if (distance(p, curP) > distance(p, e2)) {
+									curP = e2;
+									if (!changed1) {
+										changed1 = true;
+									}
+								}
+								}
 							for (Node e2 : (ArrayDeque<Node>)grid[la2][lo2]) {
+								if (distance(d, curD) > distance(d, e2)) {
+									curD = e2;
+									if (!changed2) {
+										changed2 = true;
+									}
+								}
+							}if(!changed2)for (Node e2 : (ArrayDeque<Node>)gex[la2][lo2]) {
 								if (distance(d, curD) > distance(d, e2)) {
 									curD = e2;
 									if (!changed2) {
@@ -250,7 +267,7 @@ public class AStar {
 	}
 
 	public static void makeMap(File filename) throws FileNotFoundException {
-		int half = 0;
+		int half = 0;//double b=0;
 		Scanner input = new Scanner(filename);
 		while (input.hasNextLine()) {
 			String line = input.nextLine();
@@ -278,6 +295,9 @@ public class AStar {
 					++half;
 				}
 				int id2 = Integer.parseInt(segs[1]);
+				//double d=distance(nodes.get(id),nodes.get(id2));
+				//if(d>b && d<1.85)b=d;
+				
 				if (nodes.containsKey(id) && nodes.containsKey(id2)) {
 
 					//				System.out.println(nodes.get(id).toString());
@@ -294,6 +314,7 @@ public class AStar {
 				}
 			}
 		}
+		//System.out.println(b);
 		input.close();
 	}
 
