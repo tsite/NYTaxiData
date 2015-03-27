@@ -94,9 +94,9 @@ public class AStar {
 		grid[la][lo].add(e2);
 		for(int i=-1;i<2;i++)for(int j=-1;j<2;j++)if((i!=0 || j!=0) && la+i>=0 && la+i<gridLat && lo+j>=0 && lo+j<=gridLon)gex[la+i][lo+j].add(e2);
 		}
-		int mx=0;
-		for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
-		System.out.println(mx);
+		//int mx=0;
+		//for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
+		//System.out.println(mx);
 		//=>515 max nodes (@1000 each)! very reasonable. can increase __ to decrease nodes.
 
 		//		System.out.println("~~~~~~~~~~~~~~~~ ALL NODES IN LIST OF NODES: ~~~~~~~~~~~~~~~~~");
@@ -248,7 +248,7 @@ public class AStar {
 							} else {
 								//distance = -1;
 							}
-							output.println(distance);
+							output.println(distance+"\t"+curP.id()+"\t"+curD.id());
 							//output.flush();
 							//System.out.println(System.currentTimeMillis()-s);
 						}
