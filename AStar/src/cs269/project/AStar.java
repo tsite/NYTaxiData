@@ -189,8 +189,9 @@ public class AStar {
 							int lo1=(int)(gridLon*(lon1-minlon)/(1.+maxlon-minlon));
 							int la2=(int)(gridLat*(lat2-minlat)/(1.+maxlat-minlat));
 							int lo2=(int)(gridLon*(lon2-minlon)/(1.+maxlon-minlon));
+							distance=-3;
 							if(la1<0 || la1>=gridLat || la2<0 || la2>=gridLat || lo1<0 || lo1>=gridLon || lo2<0 || lo2>=gridLon)
-							{System.out.println("BAAD LINE");output.println("MISS");}
+							{distance=-2;/*System.out.println("BAAD LINE");output.println("MISS");*/}
 							else{
 							for (Node e2 : (ArrayDeque<Node>)grid[la1][lo1]) {
 								if (distance(p, curP) > distance(p, e2)) {
@@ -245,7 +246,7 @@ public class AStar {
 								
 								aStar(curP, curD, dist+.5);	
 							} else {
-								distance = 0;
+								//distance = -1;
 							}
 							output.println(distance);
 							//output.flush();
@@ -321,7 +322,7 @@ public class AStar {
 
 	public static boolean aStar (Node start, Node goal, double dist) {
 
-		distance = 0;
+		distance = -1;
 		solution.clear();
 
 		start.setGval(0);
