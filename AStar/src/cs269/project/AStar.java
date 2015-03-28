@@ -172,11 +172,11 @@ public class AStar {
 							
 							String ride = input.nextLine();
 							String[] data = ride.split(",");
-							double lat1 = Double.parseDouble(data[11]);
-							double lon1 = Double.parseDouble(data[10]);
-							double lat2 = Double.parseDouble(data[13]);
-							double lon2 = Double.parseDouble(data[12]);
-							double dist = Double.parseDouble(data[9]);
+							double lat1 = Double.parseDouble(/*data[11]*/data[2]);
+							double lon1 = Double.parseDouble(/*data[10]*/data[1]);
+							double lat2 = Double.parseDouble(/*data[13]*/data[4]);
+							double lon2 = Double.parseDouble(/*data[12]*/data[3]);
+							double dist = Double.parseDouble(/*data[9]*/data[0]);
 
 							Node p = new Node(0, lat1, lon1);
 							Node d = new Node(0, lat2, lon2);
