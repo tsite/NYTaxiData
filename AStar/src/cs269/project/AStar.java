@@ -347,7 +347,7 @@ public class AStar {
 			//			System.out.println("Distance to goal: " + current.hval());
 			//			System.out.println("Distance traveled: " + current.gval());
 			if (current.equals(goal)) {
-				distance = current.gval();
+				distance = current.gval(); //current.gval()==current.fval()
 //				solution.addFirst(current);
 //				while (!current.equals(start)) {
 //					current = path.get(current);
