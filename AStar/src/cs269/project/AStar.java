@@ -110,7 +110,7 @@ public class AStar {
 		//            System.out.println("");
 		//		}
 
-		Scanner console = new Scanner(System.in);
+		/*Scanner console = new Scanner(System.in);
 		int choice = 0;
 		do {
 			System.out.print("Enter 1 to find individual paths, 2 to process files, and 3 to exit: ");
@@ -147,8 +147,8 @@ public class AStar {
 			}
 			else {
 				System.out.println("Enter names of input files separated by commas: ");
-				String f = console.nextLine();
-				String[] files = f.split(","); 
+				String f = console.nextLine();*/
+				String[] files = args;
 
 				System.out.println("Processing " + files.length + " files...");
 
@@ -158,7 +158,7 @@ public class AStar {
 						Scanner input = new Scanner(new File(files[i]));
 						String name = files[i].substring(0, files[i].indexOf("."));
 						PrintWriter output = new PrintWriter(new File(name + "_output.txt"));
-						input.nextLine();
+						//input.nextLine(); DO NOT SKIP FIRST LAST AS HEADER REMOVED
 						int counter = 0;
 						long ss=System.currentTimeMillis();
 						while (input.hasNextLine()) {
@@ -258,12 +258,12 @@ public class AStar {
 					} catch (FileNotFoundException e) {
 						System.out.println("File not found... moving to next file...");
 					}
-					System.out.println("All files processed.");
 				}
-			}
+				System.out.println("All files processed.");
+			/*}
 		} while (choice != 3);
 
-		console.close();
+		console.close();*/
 		System.out.println("Goodbye");
 	}
 
