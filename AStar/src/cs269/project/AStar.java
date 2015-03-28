@@ -201,7 +201,7 @@ public class AStar {
 									}
 								}
 								}
-							if(!changed1)for (Node e2 : (ArrayDeque<Node>)gex[la1][lo1]) {
+							/*if(!changed1)*/for (Node e2 : (ArrayDeque<Node>)gex[la1][lo1]) {
 								if (distance(p, curP) > distance(p, e2)) {
 									curP = e2;
 									if (!changed1) {
@@ -216,7 +216,7 @@ public class AStar {
 										changed2 = true;
 									}
 								}
-							}if(!changed2)for (Node e2 : (ArrayDeque<Node>)gex[la2][lo2]) {
+							}/*if(!changed2)*/for (Node e2 : (ArrayDeque<Node>)gex[la2][lo2]) {
 								if (distance(d, curD) > distance(d, e2)) {
 									curD = e2;
 									if (!changed2) {
