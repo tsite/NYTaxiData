@@ -172,6 +172,7 @@ public class AStar {
 							
 							String ride = input.nextLine();
 							String[] data = ride.split(",");
+							try{
 							double lat1 = Double.parseDouble(/*data[11]*/data[2]);
 							double lon1 = Double.parseDouble(/*data[10]*/data[1]);
 							double lat2 = Double.parseDouble(/*data[13]*/data[4]);
@@ -251,7 +252,7 @@ public class AStar {
 							output.println(distance+"\t"+curP.id()+"\t"+curD.id());
 							//output.flush();
 							//System.out.println(System.currentTimeMillis()-s);
-						}
+						}catch(Exception e){/*System.out.println("BAD LINE FOUND");*/output.println("-4.0\t0\t0");}} //BAD_LINE
 						System.out.println(files[i] + " finished processing.");
 						input.close();
 						output.close();
