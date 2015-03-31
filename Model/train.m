@@ -9,29 +9,23 @@ X = data(:, 2:end); y = data(:, 1);
 clear('data');
 
 m = length(y); % number of training examples
-n = size(X,2);
-Xn = X;
-for i = 1:n
-	Xn = [Xn X.^i];
-end
 
-X = Xn;
 
 
 X = [ones(m, 1), X]; % Add a column of ones to x and the quadratic terms
 n = size(X,2);
 
 
-theta = zeros(n, 1); % initialize fitting parameters
+theta = 10^-5*unifrnd(-1,1,n,1)%zeros(n, 1); % initialize fitting parameters
 
-iterations = 400;
-alpha = .0001;
+iterations = 800;
+alpha = .5;
 lambda = 1;
 
 X_norm = zeros(m,n);
 X_norm(:,1) = ones(m,1);
 
-%Normalize
+%Rescale
 for j = 2:n
 	Xvec = X(:,j);
 	X_norm(:,j) = (Xvec - ones(m,1)*min(Xvec))/(max(Xvec) - min(Xvec));
@@ -53,19 +47,23 @@ printf("\n");
 
 testData = load('-ascii','trip_data_test.txt');
 Xtest = testData(:,2:end);
+
 m = size(Xtest,1);
 
-n = size(Xtest,2);
-Xn = Xtest;
+Xtest = [ones(m,1), Xtest];
 
-for i = 1:n
-	Xn = [Xn Xtest.^i];
+n = size(Xtest,2);
+
+Xtest_norm = zeros(m,n);
+Xtest_norm(:,1) = ones(m,1);
+
+for j = 2:n
+	Xvec = Xtest(:,j);
+	Xtest_norm(:,j) = (Xvec - ones(m,1)*min(Xvec))/(max(Xvec) - min(Xvec));
 end
 
-Xtest = Xn;
 
-Xtest = [ones(m,1), Xtest];
 Ytest = testData(:,1);
 
-err = test(Xtest,Ytest,theta);
+err = test(Xtest_norm,Ytest,theta);
 printf('Average Time Error: %d minutes\n',err/60);
