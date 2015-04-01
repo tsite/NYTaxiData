@@ -31,7 +31,7 @@ X_norm = [ones(m,1),X_norm];
 %theta = 10^-4*unifrnd(-1,1,n,1);
 theta = zeros(n,1);
 iterations = 800;
-alpha = .3;
+alpha = .1;
 lambda = 0;
 
 
@@ -47,7 +47,7 @@ for i=1:n
 end
 printf("\n");
 
-errTraining = test(X_norm,y,theta);
+errTraining = testTheta(X_norm,y,theta);
 
 printf('Training Error: %.2f Minutes\n',errTraining/60);
 
@@ -68,7 +68,7 @@ Xval = [Xval Xval.^2 Xval.^3];
 Xval_norm = featureScale(Xval);
 Xval_norm = [ones(mval,1) Xval_norm];
 
-errValidate = test(Xval_norm,yval,theta);
+errValidate = testTheta(Xval_norm,yval,theta);
 
 printf('Cross Validation Error: %.2f Minutes\n',errValidate/60);
 
@@ -109,6 +109,8 @@ Xtest_norm = [ones(mtest,1) Xtest_norm];
 Ytest = testData(:,1);
 clear('testData');
 
-err = test(Xtest_norm,Ytest,theta);
+err = testTheta(Xtest_norm,Ytest,theta);
 
 printf('Average Time Error: %.2f minutes\n',err/60);
+
+save('-ascii','theta_calc.txt','theta');
