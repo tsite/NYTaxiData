@@ -9,27 +9,23 @@ X = data(:, 2:end); y = data(:, 1);
 clear('data');
 
 m = length(y); % number of training examples
+n = size(X,2) + 1; %number of features plus the bias feature
+
+%Scale the features [implementation left to featureScale()]
+X_norm = featureScale(X);
+
+ % Add a column of ones (bias column) to x_norm
+X_norm = [ones(m,1),X_norm];
 
 
 
-X = [ones(m, 1), X]; % Add a column of ones to x and the quadratic terms
-n = size(X,2);
+% initialize fitting parameters with
+%random values in case of symmetry
+theta = 10^-4*unifrnd(-1,1,n,1)
 
-
-theta = 10^-5*unifrnd(-1,1,n,1)%zeros(n, 1); % initialize fitting parameters
-
-iterations = 800;
-alpha = .5;
-lambda = 1;
-
-X_norm = zeros(m,n);
-X_norm(:,1) = ones(m,1);
-
-%Rescale
-for j = 2:n
-	Xvec = X(:,j);
-	X_norm(:,j) = (Xvec - ones(m,1)*min(Xvec))/(max(Xvec) - min(Xvec));
-end
+iterations = 400;
+alpha = .5515;
+lambda = 0;
 
 
 % run gradient descent
@@ -45,25 +41,41 @@ end
 printf("\n");
 
 
+%VALIDATE MODEL HERE
+%USING VALIDATION DATA SEPARATE FROM THE TRAINING DATA
+
+validData = load('-ascii','trip_data_valid.txt');
+Xval = validData(:,2:end);
+yval = validData(:,1);
+clear('validData');
+
+mval = size(Xval,1);
+
+Xval_norm = featureScale(Xval);
+Xval_norm = [ones(mval,1) Xval_norm];
+
+[errTrain,errVal] = learnCurve(X_norm,y,Xval_norm,yval,alpha,lambda);
+
+figure();
+hold on;
+plot(1:size(errTrain,1),errTrain);
+plot(1:size(errVal,1),errVal);
+hold off;
+
+%TEST THE MODEL HERE
+%USING TESTING DATA SEPARATE FROM THE TRAINING AND
+%VALIDATION DATA
+
 testData = load('-ascii','trip_data_test.txt');
 Xtest = testData(:,2:end);
 
-m = size(Xtest,1);
+mtest = size(Xtest,1);
 
-Xtest = [ones(m,1), Xtest];
-
-n = size(Xtest,2);
-
-Xtest_norm = zeros(m,n);
-Xtest_norm(:,1) = ones(m,1);
-
-for j = 2:n
-	Xvec = Xtest(:,j);
-	Xtest_norm(:,j) = (Xvec - ones(m,1)*min(Xvec))/(max(Xvec) - min(Xvec));
-end
-
+Xtest_norm = featureScale(Xtest);
+Xtest_norm = [ones(mtest,1) Xtest_norm];
 
 Ytest = testData(:,1);
 
 err = test(Xtest_norm,Ytest,theta);
-printf('Average Time Error: %d minutes\n',err/60);
+
+printf('Average Time Error: %.2f minutes\n',err/60);

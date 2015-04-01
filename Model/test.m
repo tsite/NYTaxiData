@@ -2,6 +2,6 @@ function error = test(X,y,theta)
 
 m = length(y);
 
-error = sum(abs((X*theta - y)))/m;
+error = (1/(m))*sum(abs((X*theta - y)));
 
 end

@@ -8,31 +8,23 @@ for iter = 1:num_iters
     printf("\rGradient Descent Running\tIteration: %d",iter);
     fflush(stdout);
     
-    %Regularized Gradient Descent
 
+
+    %Regularized cost function for Gradient Descent
+    [cost,grad] = costFunction(X,y,theta,lambda);
     
-
-    grad(1) = 1/m * sum((X*theta - y).*X(:,1));
-
-    for j = 2:size(theta)
-        grad(j) = 1/m * sum((X*theta - y).*X(:,j)) + lambda/m * theta(j);
-    end
 
 
     tmptheta = theta;
     for j = 1:length(theta)
-        tmptheta(j) = theta(j) - (alpha*(1/m)*grad(j));
+        tmptheta(j) = theta(j) - alpha*grad(j);
     end
 
     theta = tmptheta;
 
 
 
-
-
-    % ============================================================
-
 end
     printf("\n");
 
-end
+end 

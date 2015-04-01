@@ -35,13 +35,18 @@ def writeSample(inf,of,sampleList):
 
 scriptfile,infile = argv
 
+totalExamples = 173179759
+
+
 
 #GENERATE TRAINING DATA
 
 inf = open(infile,'r')
 of = open('trip_data_sample.txt','w')
 
-sampleList = sorted(random.sample(range(173179759),1000000))
+trainExamples = 1000000
+
+sampleList = sorted(random.sample(range(totalExamples),trainExamples))
 
 print("GENERATING TRAINING DATA...")
 
@@ -52,13 +57,28 @@ print("\nDONE.")
 of.close()
 
 
+#GENERATE CROSS VALIDATION DATA
+numValidate = 500000
+inf.seek(0)
+
+of = open('trip_data_valid.txt','w')
+
+sampleList = sorted(random.sample(range(totalExamples),numValidate))
+
+print("GENERATING VALIDATION DATA...")
+
+writeSample(inf,of,sampleList)
+
+print("\nDONE.")
 
 #GENERATE TEST DATA
+
+numTests = 500000
 inf.seek(0)
 
 of = open('trip_data_test.txt','w')
 
-sampleList = sorted(random.sample(range(173179759),500000))
+sampleList = sorted(random.sample(range(totalExamples),numTests))
 
 print("GENERATING TEST DATA...")
 
