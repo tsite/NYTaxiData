@@ -13,15 +13,23 @@ clear('data');
 
 m = length(y); % number of training examples
 
-X = [X X.^2 X.^3];
+%No need to get the squares of the binary value
+%isWeekday. isWeeday = {1,0} and as such the squares
+%are also in {1,0}
+
+X = [X X(:,2:end).^2 X(:,2:end).^3];
+
+
 
 n = size(X,2) + 1; %number of features plus the bias feature
 
 
 %Scale the features [implementation left to featureScale()]
-X_norm = featureScale(X);
 
- % Add a column of ones (bias column) to x_norm
+X_norm = [X(:,1) featureScale(X(:,2:end))];
+
+
+% Add a column of ones (bias column) to x_norm
 X_norm = [ones(m,1),X_norm];
 
 
@@ -30,7 +38,7 @@ X_norm = [ones(m,1),X_norm];
 %random values in case of symmetry
 %theta = 10^-4*unifrnd(-1,1,n,1);
 theta = zeros(n,1);
-iterations = 800;
+iterations = 1600;
 alpha = .1;
 lambda = 0;
 
@@ -63,9 +71,9 @@ clear('validData');
 
 mval = size(Xval,1);
 
-Xval = [Xval Xval.^2 Xval.^3];
+Xval = [Xval Xval(:,2:end).^2 Xval(:,2:end).^3];
 
-Xval_norm = featureScale(Xval);
+Xval_norm = [Xval(:,1) featureScale(Xval(:,2:end))];
 Xval_norm = [ones(mval,1) Xval_norm];
 
 errValidate = testTheta(Xval_norm,yval,theta);
@@ -101,9 +109,9 @@ Xtest = testData(:,2:end);
 
 mtest = size(Xtest,1);
 
-Xtest = [Xtest Xtest.^2 Xtest.^3];
+Xtest = [Xtest Xtest(:,2:end).^2 Xtest(:,2:end).^3];
 
-Xtest_norm = featureScale(Xtest);
+Xtest_norm = [Xtest(:,1) featureScale(Xtest(:,2:end))];
 Xtest_norm = [ones(mtest,1) Xtest_norm];
 
 Ytest = testData(:,1);
