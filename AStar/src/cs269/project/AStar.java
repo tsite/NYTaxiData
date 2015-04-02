@@ -94,9 +94,9 @@ public class AStar {
 		grid[la][lo].add(e2);
 		for(int i=-1;i<2;i++)for(int j=-1;j<2;j++)if((i!=0 || j!=0) && la+i>=0 && la+i<gridLat && lo+j>=0 && lo+j<=gridLon)gex[la+i][lo+j].add(e2);
 		}
-		int mx=0;
-		for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
-		System.out.println(mx);
+		//int mx=0;
+		//for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
+		//System.out.println(mx);
 		//=>515 max nodes (@1000 each)! very reasonable. can increase __ to decrease nodes.
 
 		//		System.out.println("~~~~~~~~~~~~~~~~ ALL NODES IN LIST OF NODES: ~~~~~~~~~~~~~~~~~");
@@ -110,7 +110,7 @@ public class AStar {
 		//            System.out.println("");
 		//		}
 
-		Scanner console = new Scanner(System.in);
+		/*Scanner console = new Scanner(System.in);
 		int choice = 0;
 		do {
 			System.out.print("Enter 1 to find individual paths, 2 to process files, and 3 to exit: ");
@@ -147,8 +147,8 @@ public class AStar {
 			}
 			else {
 				System.out.println("Enter names of input files separated by commas: ");
-				String f = console.nextLine();
-				String[] files = f.split(","); 
+				String f = console.nextLine();*/
+				String[] files = args;
 
 				System.out.println("Processing " + files.length + " files...");
 
@@ -158,7 +158,7 @@ public class AStar {
 						Scanner input = new Scanner(new File(files[i]));
 						String name = files[i].substring(0, files[i].indexOf("."));
 						PrintWriter output = new PrintWriter(new File(name + "_output.txt"));
-						input.nextLine();
+						//input.nextLine(); DO NOT SKIP FIRST LAST AS HEADER REMOVED
 						int counter = 0;
 						long ss=System.currentTimeMillis();
 						while (input.hasNextLine()) {
@@ -172,11 +172,12 @@ public class AStar {
 							
 							String ride = input.nextLine();
 							String[] data = ride.split(",");
-							double lat1 = Double.parseDouble(data[11]);
-							double lon1 = Double.parseDouble(data[10]);
-							double lat2 = Double.parseDouble(data[13]);
-							double lon2 = Double.parseDouble(data[12]);
-							double dist = Double.parseDouble(data[9]);
+							try{
+							double lat1 = Double.parseDouble(/*data[11]*/data[2]);
+							double lon1 = Double.parseDouble(/*data[10]*/data[1]);
+							double lat2 = Double.parseDouble(/*data[13]*/data[4]);
+							double lon2 = Double.parseDouble(/*data[12]*/data[3]);
+							double dist = Double.parseDouble(/*data[9]*/data[0]);
 
 							Node p = new Node(0, lat1, lon1);
 							Node d = new Node(0, lat2, lon2);
@@ -201,7 +202,7 @@ public class AStar {
 									}
 								}
 								}
-							if(!changed1)for (Node e2 : (ArrayDeque<Node>)gex[la1][lo1]) {
+							/*if(!changed1)*/for (Node e2 : (ArrayDeque<Node>)gex[la1][lo1]) {
 								if (distance(p, curP) > distance(p, e2)) {
 									curP = e2;
 									if (!changed1) {
@@ -216,7 +217,7 @@ public class AStar {
 										changed2 = true;
 									}
 								}
-							}if(!changed2)for (Node e2 : (ArrayDeque<Node>)gex[la2][lo2]) {
+							}/*if(!changed2)*/for (Node e2 : (ArrayDeque<Node>)gex[la2][lo2]) {
 								if (distance(d, curD) > distance(d, e2)) {
 									curD = e2;
 									if (!changed2) {
@@ -248,22 +249,22 @@ public class AStar {
 							} else {
 								//distance = -1;
 							}
-							output.println(distance);
+							output.println(distance+"\t"+curP.id()+"\t"+curD.id());
 							//output.flush();
 							//System.out.println(System.currentTimeMillis()-s);
-						}
+						}catch(Exception e){/*System.out.println("BAD LINE FOUND");*/output.println("-4.0\t0\t0");}} //BAD_LINE
 						System.out.println(files[i] + " finished processing.");
 						input.close();
 						output.close();
 					} catch (FileNotFoundException e) {
 						System.out.println("File not found... moving to next file...");
 					}
-					System.out.println("All files processed.");
 				}
-			}
+				System.out.println("All files processed.");
+			/*}
 		} while (choice != 3);
 
-		console.close();
+		console.close();*/
 		System.out.println("Goodbye");
 	}
 
@@ -347,7 +348,7 @@ public class AStar {
 			//			System.out.println("Distance to goal: " + current.hval());
 			//			System.out.println("Distance traveled: " + current.gval());
 			if (current.equals(goal)) {
-				distance = current.gval();
+				distance = current.gval(); //current.gval()==current.fval()
 //				solution.addFirst(current);
 //				while (!current.equals(start)) {
 //					current = path.get(current);
