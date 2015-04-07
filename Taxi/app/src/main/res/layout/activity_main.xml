@@ -13,7 +13,8 @@
         android:layout_alignParentStart="true"
         android:gravity="center_horizontal"
         android:textSize="25dp"
-        android:id="@+id/textView1" />
+        android:id="@+id/textView1"
+        android:textColor="#000000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,10 +22,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Enter start and end coordinates..."
         android:id="@+id/textView2"
+        android:layout_marginTop="29dp"
         android:layout_below="@+id/textView1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="40dp"
         android:layout_alignRight="@+id/textView1"
         android:layout_alignEnd="@+id/textView1" />
 
@@ -64,12 +65,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/editText3"
         android:text="Ending latitude..."
+        android:layout_marginTop="37dp"
         android:layout_below="@+id/button1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="75dp"
-        android:layout_alignRight="@+id/editText4"
-        android:layout_alignEnd="@+id/editText4" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -86,12 +87,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Calculate my trip!"
-        android:id="@+id/button2"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/calculate"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/editText4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="59dp"
-        android:layout_alignRight="@+id/editText4"
-        android:layout_alignEnd="@+id/editText4" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance:\nTime:"
+        android:id="@+id/output"
+        android:layout_below="@+id/calculate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:textSize="20dp"
+        android:textColor="#000000" />
 
 </RelativeLayout>
