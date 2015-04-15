@@ -1,35 +1,32 @@
 from sys import argv
 import random
+import linecache
 
-
+#Inf is a filename, of is an open file pointer
 def writeSample(inf,of,sampleList):
-	lineCount = 0
+
 	sequenceCount = 0
-
+	linecount = 0
 	seqLen = len(sampleList)
-
 	line = inf.readline()
 
-	while line:
-		if lineCount % 500000 == 0:
-			print("\rLines Processed:\t",lineCount,end=" ")
-
-		if lineCount == sampleList[sequenceCount]:
+	while line and sequenceCount < seqLen:
+		if linecount == sampleList[sequenceCount]:
+	
 			lineArr = line.split()
-			if len(lineArr) != 8 or lineArr[-1] == str(0):
+		
+			if lineArr[-1] == str(0) or lineArr[-2] == str(0) or lineArr[-3] == str(0) or lineArr[-4] == str(0):
 				sampleList[sequenceCount] += 1
 				continue
 
-			of.write(line)
+			of.write(str(line))
+
+
+			print("\rSamples Generated:\t",sequenceCount,end=" ")
 			sequenceCount += 1
 		
-			if sequenceCount >= seqLen:
-				break
-
 		line = inf.readline()
-		lineCount += 1
-
-	print("")
+		linecount += 1
 
 
 
@@ -44,9 +41,13 @@ totalExamples = 173179759
 inf = open(infile,'r')
 of = open('trip_data_sample.txt','w')
 
-trainExamples = 1000000
+trainExamples = 50000
 
 sampleList = sorted(random.sample(range(totalExamples),trainExamples))
+
+print(len(sampleList))
+print(sampleList[0],sampleList[-1])
+
 
 print("GENERATING TRAINING DATA...")
 
@@ -58,7 +59,7 @@ of.close()
 
 
 #GENERATE CROSS VALIDATION DATA
-numValidate = 500000
+numValidate = 10000
 inf.seek(0)
 
 of = open('trip_data_valid.txt','w')
@@ -73,7 +74,7 @@ print("\nDONE.")
 
 #GENERATE TEST DATA
 
-numTests = 500000
+numTests = 10000
 inf.seek(0)
 
 of = open('trip_data_test.txt','w')

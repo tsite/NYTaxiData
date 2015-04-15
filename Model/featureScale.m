@@ -1,12 +1,10 @@
-function X_norm = featureScale(X)
+function X_norm = featureScale(X,mu,stdev)
 
 	m = size(X,1);
 	n = size(X,2);
 
 	X_norm = zeros(m,n);
 
-	mu = mean(X);
-	stdev = std(X);
 
 
 	for j = 1:n

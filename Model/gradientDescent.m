@@ -15,12 +15,7 @@ for iter = 1:num_iters
     
 
 
-    tmptheta = theta;
-    for j = 1:length(theta)
-        tmptheta(j) = theta(j) - alpha*grad(j);
-    end
-
-    theta = tmptheta;
+    theta = theta - alpha*grad;
 
 
 

@@ -1,4 +1,4 @@
-pythimport datetime
+import datetime
 from sys import argv
 
 scriptfile,infile,ofile = argv
@@ -12,32 +12,31 @@ tInSec = 0;
 
 line = inf.readline()
 
-outArr = []
 
 progressCounter = 0;
 
 while line:
 	lineArr = line.split(',')
-	#print(lineArr[5])
-	d = datetime.datetime.strptime(lineArr[5],"%Y-%m-%d %H:%M:%S")
+	if len(lineArr) == 14:
+		d = datetime.datetime.strptime(lineArr[5],"%Y-%m-%d %H:%M:%S")
 	
 
-	if d.weekday() < 5:
-		isWeekday = 1
-	else:
-		isWeekday = 0
+		#if d.weekday() < 5:
+		#	isWeekday = 1
+		#else:
+		#	isWeekday = 0
 
-	tInSec = d.second + d.minute*60 + d.hour*3600
+		tInSec = d.second + d.minute*60 + d.hour*3600
 
 
-	of.write(lineArr[8] + " ")
-	of.write(str(isWeekday) + " ")
-	of.write(str(tInSec) + " ")
-	
-	for col in lineArr[9:-1]:
-		of.write(str(col) + " ")
+		of.write(lineArr[8] + " ")
+		of.write(str(d.weekday()) + " ")
+		of.write(str(tInSec) + " ")
+		
+		for col in lineArr[9:-1]:
+			of.write(str(col) + " ")
 
-	of.write(str(lineArr[-1]))
+		of.write(str(lineArr[-1]))
 
 	progressCounter += 1
 
