@@ -36,38 +36,42 @@ public class TaxiServer {
 	
 	public static void main (String args[]) {
 		
-		Vector<TaxiThread> threads = new Vector<TaxiThread>();
-		
 		try {
-			makeMap(new File(FILENAME));
-		
+//			makeMap(new File(FILENAME));	
+//			
+//			for (Entry<Integer, Node> e : nodes.entrySet()) {
+//				//nodeArray[e.getValue().id()] = e.getValue();
+//				Node e2=e.getValue();
+//				if(e2.lat()<minlat)minlat=e2.lat();if(e2.lon()<minlon)minlon=e2.lon();
+//				if(e2.lat()>maxlon)maxlat=e2.lat();if(e2.lon()>maxlon)maxlon=e2.lon();
+//			}
+//			System.out.println(minlat+" "+maxlat+" "+minlon+" "+maxlon);
+//			for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++){grid[i][j]=new ArrayDeque<Node>();gex[i][j]=new ArrayDeque<Node>();}
+//			System.out.println("debug1");
+//			for (Entry<Integer, Node> e : nodes.entrySet()) {
+//			Node e2=e.getValue();
+//			int la=(int)(gridLat*(e2.lat()-minlat)/(1.+maxlat-minlat));
+//			int lo=(int)(gridLon*(e2.lon()-minlon)/(1.+maxlon-minlon));
+//			grid[la][lo].add(e2);
+//			for(int i=-1;i<2;i++)for(int j=-1;j<2;j++)if((i!=0 || j!=0) && la+i>=0 && la+i<gridLat && lo+j>=0 && lo+j<=gridLon)gex[la+i][lo+j].add(e2);
+//			}
+//			System.out.println("debug2");
+//			int mx=0;
+//			for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
+//			System.out.println(mx);
+			
 			ServerSocket serv = new ServerSocket(PORT);
-			serv.setSoTimeout(1000);	
+			serv.setSoTimeout(1000);
 			
-			for (Entry<Integer, Node> e : nodes.entrySet()) {
-				//nodeArray[e.getValue().id()] = e.getValue();
-				Node e2=e.getValue();
-				if(e2.lat()<minlat)minlat=e2.lat();if(e2.lon()<minlon)minlon=e2.lon();
-				if(e2.lat()>maxlon)maxlat=e2.lat();if(e2.lon()>maxlon)maxlon=e2.lon();
-			}
-			System.out.println(minlat+" "+maxlat+" "+minlon+" "+maxlon);
-			for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++){grid[i][j]=new ArrayDeque<Node>();gex[i][j]=new ArrayDeque<Node>();}
-			for (Entry<Integer, Node> e : nodes.entrySet()) {
-			Node e2=e.getValue();
-			int la=(int)(gridLat*(e2.lat()-minlat)/(1.+maxlat-minlat));
-			int lo=(int)(gridLon*(e2.lon()-minlon)/(1.+maxlon-minlon));
-			grid[la][lo].add(e2);
-			for(int i=-1;i<2;i++)for(int j=-1;j<2;j++)if((i!=0 || j!=0) && la+i>=0 && la+i<gridLat && lo+j>=0 && lo+j<=gridLon)gex[la+i][lo+j].add(e2);
-			}
-			int mx=0;
-			for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
-			System.out.println(mx);
+			System.out.println("Listening on port: " + PORT);
 			
+			System.out.println("Accepting connections...");
+			Vector<TaxiThread> threads = new Vector<TaxiThread>();
 			
 			while (loop) {
 				try {
 					Socket s = serv.accept();
-					TaxiThread tt = new TaxiThread(serv, s);
+					TaxiThread tt = new TaxiThread(serv, s);//, grid, gex);
 					threads.add(tt);
 					tt.start();
 				} catch (SocketTimeoutException ignore) {}

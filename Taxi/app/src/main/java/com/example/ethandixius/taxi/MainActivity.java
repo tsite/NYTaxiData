@@ -32,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAG = "MainActivity.java";
 
     public static final int PORT = 2000;
+    public static final String SERVER = "ec2-52-11-19-67.us-west-2.compute.amazonaws.com";
     public static Double lat = 0.0;
     public static Double lon = 0.0;
     public static Double distance = 0.0;
@@ -153,8 +154,9 @@ public class MainActivity extends ActionBarActivity {
 //        } catch (UnknownHostException e) {
 //        } catch (IOException e) {}
 
-        network();
+//        network();
 
+        connect();
 
     }
 
@@ -167,7 +169,7 @@ public class MainActivity extends ActionBarActivity {
                     Log.i(TAG, "Trying to connect to server...");
 //                    Toast.makeText(getApplicationContext(), "Trying to connect to server...", Toast.LENGTH_SHORT).show();
 
-                    s = new Socket(InetAddress.getByName("ec2-52-10-72-68.us-west-2.compute.amazonaws.com"), PORT);
+                    s = new Socket(InetAddress.getByName("ec2-52-10-25-178.us-west-2.compute.amazonaws.com"), PORT);
 
                     Log.i(TAG, "SOCKET CREATED");
 
@@ -193,6 +195,129 @@ public class MainActivity extends ActionBarActivity {
 //                Log.i(TAG, "RECEIVING MESSAGES.");
                 incoming();
             }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    void connect() {
+
+        new AsyncTask<Void, Void, String>() {
+
+            String errorMsg = null;
+
+            @Override
+            protected String doInBackground(Void... args) {
+                Log.i(TAG, "Connect task started");
+                try {
+                    connection = false;
+                    s = new Socket(SERVER, PORT);
+                    Log.i(TAG, "Socket created");
+                    in = new BufferedReader(new InputStreamReader(
+                            s.getInputStream()));
+                    out = new PrintWriter(s.getOutputStream());
+
+                    connection = true;
+                    Log.i(TAG, "Input and output streams ready");
+
+                } catch (UnknownHostException e1) {
+                    errorMsg = e1.getMessage();
+                } catch (IOException e1) {
+                    errorMsg = e1.getMessage();
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                        if (s != null) {
+                            s.close();
+                        }
+                    } catch (IOException ignored) {
+                    }
+                }
+                Log.i(TAG, "Connect task finished");
+                return errorMsg;
+            }
+
+            @Override
+            protected void onPostExecute(String errorMsg) {
+                if (errorMsg == null) {
+                    Toast.makeText(getApplicationContext(),
+                            "Connected to server", Toast.LENGTH_SHORT).show();
+
+//                    hideConnectingText();
+//                    showLoginControls();
+
+                    // start receiving
+                    receive();
+
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Error: " + errorMsg, Toast.LENGTH_SHORT).show();
+                    // can't connect: close the activity
+                    finish();
+                }
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    void receive() {
+        new AsyncTask<Void, String, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... args) {
+                Log.i(TAG, "Receive task started");
+                try {
+                    while (connection) {
+
+                        String msg = in.readLine();
+
+                        if (msg == null) { // other side closed the
+                            // connection
+                            break;
+                        }
+                        publishProgress(msg);
+                    }
+
+                } catch (UnknownHostException e1) {
+                    Log.i(TAG, "UnknownHostException in receive task");
+                } catch (IOException e1) {
+                    Log.i(TAG, "IOException in receive task");
+                } finally {
+                    connection = false;
+                    try {
+                        if (out != null)
+                            out.close();
+                        if (s != null)
+                            s.close();
+                    } catch (IOException e) {
+                    }
+                }
+                Log.i(TAG, "Receive task finished");
+                return null;
+            }
+
+            @Override
+            protected void onProgressUpdate(String... lines) {
+                // the message received from the server is
+                // guaranteed to be not null
+//                String msg = lines[0];
+
+                String m = lines[0];
+
+                String[] data = m.split(",");
+                if (data.length == 1) {
+                    output.setText(data[0]);
+                }
+                else {
+                    distance = Double.parseDouble(data[0]);
+                    time = Double.parseDouble(data[1]);
+
+                    output.setText("Distance: " + distance + "\nTime: " + time);
+                }
+
+
+                // if we haven't returned yet, tell the user that we have an unhandled message
+                Toast.makeText(getApplicationContext(), "Unhandled message: "+m, Toast.LENGTH_SHORT).show();
+            }
+
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -235,26 +360,80 @@ public class MainActivity extends ActionBarActivity {
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    boolean send(String m) {
+    boolean send(String msg) {
         if (!connection) {
+            Log.i(TAG, "can't send: not connected");
             return false;
         }
 
         new AsyncTask<String, Void, Boolean>() {
 
             @Override
-            protected Boolean doInBackground(String... m) {
-                Log.i(TAG, "Trying to send message...");
-                out.println(m[0]);
+            protected Boolean doInBackground(String... msg) {
+                Log.i(TAG, "sending: " + msg[0]);
+                out.println(msg[0]);
                 return out.checkError();
             }
 
             @Override
-            protected void onPostExecute(Boolean e) {}
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, m);
+            protected void onPostExecute(Boolean error) {
+                if (!error) {
+//                    Toast.makeText(getApplicationContext(),
+//                            "Message sent to server", Toast.LENGTH_SHORT)
+//                            .show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Error sending message to server",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, msg);
 
         return true;
     }
+
+    void disconnect() {
+        new Thread() {
+            @Override
+            public void run() {
+                if (connection) {
+                    connection = false;
+                }
+                // make sure that we close the output, not the input
+                if (out != null) {
+                    out.print("BYE");
+                    out.flush();
+                    out.close();
+                }
+                // in some rare cases, out can be null, so we need to close the socket itself
+                if (s != null)
+                    try { s.close();} catch(IOException ignored) {}
+
+                Log.i(TAG, "Disconnect task finished");
+            }
+        }.start();
+    }
+
+//    boolean send(String m) {
+//        if (!connection) {
+//            return false;
+//        }
+//
+//        new AsyncTask<String, Void, Boolean>() {
+//
+//            @Override
+//            protected Boolean doInBackground(String... m) {
+//                Log.i(TAG, "Trying to send message...");
+//                out.println(m[0]);
+//                return out.checkError();
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Boolean e) {}
+//        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, m);
+//
+//        return true;
+//    }
 
     public void newLocation(Location l) {
         lat = l.getLatitude();
