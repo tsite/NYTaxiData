@@ -19,6 +19,7 @@ import org.json.simple.parser.ParseException;
 /**
  *
  * @author Ignacio Arnaldo
+ * modified by Pranav Batra
  */
 public class Road {
     
@@ -51,7 +52,7 @@ public class Road {
 		ref = (String)jsonProperties.get("ref");
         roadClass = (String) jsonProperties.get("class");
         
-        isOneway = (Long)jsonProperties.get("oneway");
+        isOneway = (Long)jsonProperties.get("oneway"); //oneway is NOT a boolean, had to fix that...
 		
         long tunnelAux = (Long)jsonProperties.get("tunnel");
         if (tunnelAux == 1) {

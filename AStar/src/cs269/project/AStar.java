@@ -14,14 +14,12 @@ import cs269.project.Node;
 import cs269.project.NodeRule;
 
 /*
- * use straight line distance between lat lon points
+ * Uses straight line distance between lat lon points
+ * Nodes are assigned to grid squares (on a 1000x1000 grid) to speed up the search for the start, end nodes.
+ * The squares that start/end coordinates lie in along with the 8 surrounding squares on the grid are all searched
+ * to find the nearest node on the graph.
  * 
- * try an array to hold nodes, ordered by id#
- * 
- * break up list of nodes into squares to speed up the fit for lat lon points
- * 
- * 
- * Notes: Distance outputs are correctly estimating optimal distance.
+ * Distance outputs are correctly estimating optimal distance.
  * 
  * Entry for line 12 in trip_data_1 correctly has a distance of 1.3 miles,
  * whereas the calculated distance is 1.8.  After looking at the map data,
@@ -97,7 +95,7 @@ public class AStar {
 		//int mx=0;
 		//for(int i=0;i<gridLat;i++)for(int j=0;j<gridLon;j++)if(grid[i][j].size()>mx)mx=grid[i][j].size();
 		//System.out.println(mx);
-		//=>515 max nodes (@1000 each)! very reasonable. can increase __ to decrease nodes.
+		//=>515 max nodes (@1000 each)! very reasonable. can increase squares to decrease nodes per square
 
 		//		System.out.println("~~~~~~~~~~~~~~~~ ALL NODES IN LIST OF NODES: ~~~~~~~~~~~~~~~~~");
 		//		for (Entry<Integer, Vector<Node>> i : map.entrySet()) {
@@ -158,7 +156,7 @@ public class AStar {
 						Scanner input = new Scanner(new File(files[i]));
 						String name = files[i].substring(0, files[i].indexOf("."));
 						PrintWriter output = new PrintWriter(new File(name + "_output.txt"));
-						//input.nextLine(); DO NOT SKIP FIRST LAST AS HEADER REMOVED
+						//input.nextLine(); DO NOT SKIP FIRST LINE AS HEADER IS REMOVED
 						int counter = 0;
 						long ss=System.currentTimeMillis();
 						while (input.hasNextLine()) {
@@ -192,7 +190,7 @@ public class AStar {
 							int lo2=(int)(gridLon*(lon2-minlon)/(1.+maxlon-minlon));
 							distance=-3;
 							if(la1<0 || la1>=gridLat || la2<0 || la2>=gridLat || lo1<0 || lo1>=gridLon || lo2<0 || lo2>=gridLon)
-							{distance=-2;/*System.out.println("BAAD LINE");output.println("MISS");*/}
+							{distance=-2;/*System.out.println("BAD LINE");output.println("MISS");*/}
 							else{
 							for (Node e2 : (ArrayDeque<Node>)grid[la1][lo1]) {
 								if (distance(p, curP) > distance(p, e2)) {

@@ -227,7 +227,7 @@ public class ParseJsonMaps {
                 break;
             case "unclassified":
                 //colorString = red;
-				colorString = blue; //unclassified roads are still usable
+				colorString = blue; //unclassified roads are still usable by motor vehicles
 				//System.err.println("WARNING: UNCLASSIFIED ROAD FOUND");
                 break;
             default:
@@ -238,20 +238,10 @@ public class ParseJsonMaps {
     }
     
     /**
-     * Print graph in TSV format 
+     * Print graph in TSV format (originally, Ignacio Arnaldo used gefx format)
      * @param roadClass
      */
     public void printGraph(String roadClass){
-        //System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        //System.out.println("<gexf xmlns=\"http://www.gexf.net/1.2draft\" xmlns:viz=\"http://www.gexf.net/1.1draft/viz\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd\" version=\"1.2\">");
-        //System.out.println("\t<meta lastmodifieddate=\"2014-12-12\">");
-        //System.out.println("\t\t<creator>Ignacio Arnaldo</creator>");
-        //System.out.println("\t\t<description>GEOJSON to GEXF</description>");
-        //System.out.println("\t</meta>");
-        //System.out.println("\t<graph mode=\"static\">");
-        
-        // SAVE NODES
-        //System.out.println("\t\t<nodes>");
         Graph g = gHighways;
         switch (roadClass) {
             case "railway":
@@ -272,37 +262,20 @@ public class ParseJsonMaps {
 			int br = coords.isBridge()?1:0; //any bridge
 			int tu = coords.isTunnel()?1:0; //any tunnel
 			System.out.println(idAux+"\t"+xCoord+"\t"+yCoord+"\t"+(2*br+tu));
-            //System.out.println("\t\t\t<node id=\""+idAux+"\" label=\"" + idAux + "\">");
-            //System.out.println("\t\t\t\t<viz:position x=\"" +xCoord + "\" y=\"" + yCoord + "\" z=\"0.0\"/>");
-            //System.out.println("\t\t\t\t<viz:size value=\"0.0000000001\"/>");
-            //System.out.println("\t\t\t\t<viz:shape value=\"disc\"/>");
-            //System.out.println("\t\t\t</node>");
-        }
-        //System.out.println("\t\t</nodes>");
-        
+        }        
        
         int edgeCounter = 0;
-        //System.out.println("\t\t<edges>");
         for(Coordinates coords:setCoordinates){
             Node node = g.getMap().get(coords);
             long idFrom = node.getNodeID();
             ArrayList<Edge> listEdges = node.getEdges();
             for(Edge edge:listEdges){
                 long idTo = edge.getNodeIDto();
-                //double weight = getWeight(edge.getType());
 				long dir=edge.isDirected();
 				System.out.println(idFrom+"\t"+idTo+"\t"+dir+"\t"+edge.getType()+"\t"+edge.getEdgename()+"\t"+edge.getRef());
-                //String colorString = getColorString(edge.getType());
-                //System.out.println("\t\t\t<edge id=\"" + edgeCounter + "\" source=\"" + idFrom + "\" target=\"" + idTo + "\" weight=\"" + weight + "\" type=\""+(dir?"directed":"undirected")+"\">");
-                //System.out.println(colorString);
-                //System.out.println("\t\t\t<viz:shape value=\"solid\"/>");
-                //System.out.println("\t\t\t</edge>");
                 edgeCounter++;
             }
         }
-        //System.out.println("\t\t</edges>");
-        //System.out.println("\t</graph>");
-        //System.out.println("</gexf>");
     }
     
 

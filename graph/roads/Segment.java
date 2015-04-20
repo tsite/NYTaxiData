@@ -9,6 +9,7 @@ package roads;
 /**
  *
  * @author Ignacio Arnaldo
+ * modified by Pranav Batra
  */
 public class Segment {
     

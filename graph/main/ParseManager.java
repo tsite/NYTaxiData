@@ -26,6 +26,7 @@ import parsejsonmaps.ParseJsonMaps;
 /**
  *
  * @author Ignacio Arnaldo
+ * modified by Pranav Batra
  */
 public class ParseManager {
     

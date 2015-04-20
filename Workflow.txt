@@ -1,0 +1,34 @@
+REM first generate the map
+cd graph
+javac -cp "lib\*" graph\*.java main\*.java parsejsonmaps\*.java roads\*.java
+java -cp ".;lib\*" main/ParseManager new-york_new-york-roads.geojson highway -100 100 -100 100 > map.tsv
+cd ../
+REM next analyze the map
+cd Map
+REM perform a DFS to find the size of disconnected components
+perl map.pl
+REM generate frequencies of each road type
+perl mcount.pl
+REM MAPM2 was converted to MAPM3 via a simple JS script (not included, but the code just reorganized the data a little)
+cd ../
+REM next run the astar search on the taxi data extracts (last 6 columns)
+cd AStar/src
+javac cs269\project\*.java
+java -Xmx1000m cs269.project.AStar trip_data_1_position.csv
+java -Xmx1000m cs269.project.AStar trip_data_2_position.csv
+REM etc
+cd ../../
+REM next parse the taxi data
+cd TripData
+javac *.java
+java lint
+cd ../
+REM next generate the volume data
+cd VOLS
+javac *.java
+java lint
+cd ../
+REM finally generate the graphs (and make the movie)
+cd Graphs
+octave makehist.m
+pause

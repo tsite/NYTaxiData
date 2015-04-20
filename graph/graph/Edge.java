@@ -21,6 +21,7 @@ package graph;
 /**
  *
  * @author Ignacio Arnaldo
+ * modified by Pranav Batra
  */
 public class Edge {
     

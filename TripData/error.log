@@ -1,0 +1,237 @@
+
+C:\Users\pranav\Desktop\course2\proj\trip_data_2.csv>"C:\Program Files\Java\jdk1
+.8.0_20\bin\javac" *.java   2>&1 1>con  | tee error.log
+
+C:\Users\pranav\Desktop\course2\proj\trip_data_2.csv>java lint
+MAP PROCESSED
+file 1processed 182101
+file 2processed 356926
+file 3processed 550109
+file 4processed 715976
+file 5processed 877301
+file 6processed 1032948
+file 7processed 1190873
+B555
+8 103308270 216.8
+B555
+8 103425789 175.6
+8 103521026 time too small
+8 103552554 time too small
+8 103563548 time too small
+8 103570180 time too small
+8 103628648 time too big
+8 103646602 time too small
+8 103650676 time too small
+8 103657630 time too small
+8 103704987 time too small
+8 103707893 time too big
+8 103730550 time too small
+8 103789614 time too small
+8 103792202 time too small
+8 103808237 time too small
+8 103815794 time too small
+8 103841091 time too small
+8 103913192 time too small
+8 103976925 time too small
+8 104006370 time too small
+8 104018525 time too small
+8 104054213 time too small
+8 104071796 time too small
+8 104086106 time too small
+8 104098448 time too small
+8 104128903 time too small
+8 104152146 time too small
+8 104160583 time too small
+8 104261644 time too small
+8 104334397 time too small
+8 104419511 time too big
+8 104437481 time too big
+8 104465827 time too small
+8 104506287 time too big
+8 104510269 time too small
+8 104511949 time too small
+8 104518382 time too small
+8 104544964 time too small
+8 104667505 time too small
+8 104678410 time too big
+8 104712539 time too small
+8 104724442 time too small
+8 104735647 time too small
+8 104755139 time too big
+8 104761036 time too small
+8 104767175 time too small
+8 104769838 time too small
+8 104905687 time too big
+8 104907847 time too small
+8 104922986 time too big
+8 104949369 time too small
+8 104951554 time too small
+8 104965364 time too small
+8 105010232 time too small
+8 105014143 time too big
+8 105102319 time too big
+8 105106212 time too big
+8 105174002 time too big
+8 105181524 time too small
+8 105199367 time too small
+8 105222356 time too small
+8 105222575 time too small
+8 105225896 time too small
+8 105235909 time too small
+8 105301107 time too small
+8 105306003 time too small
+8 105331340 time too small
+8 105356836 time too small
+8 105400065 time too big
+8 105461679 time too small
+8 105470138 time too small
+8 105476734 time too small
+8 105565222 time too big
+8 105602503 time too small
+8 105624891 time too big
+8 105631356 time too small
+8 105668599 time too small
+8 105668658 time too big
+8 105715297 time too small
+8 105718312 time too small
+8 105730769 time too small
+8 105780729 time too small
+8 105796940 time too small
+8 105854697 time too small
+8 105869574 time too small
+8 105961005 time too small
+8 105962966 time too small
+8 106051255 time too small
+8 106105809 time too small
+8 106113961 time too small
+8 106152416 time too small
+8 106159105 time too small
+8 106177825 time too small
+8 106215769 time too small
+8 106261596 time too small
+8 106269666 time too small
+8 106381841 time too small
+8 106513829 time too small
+8 106534196 time too small
+8 106542964 time too small
+8 106562128 time too small
+8 106622401 time too big
+8 106648959 time too small
+8 106667134 time too small
+8 106676203 time too small
+8 106783945 time too small
+8 106817870 time too small
+8 107057017 time too small
+8 107085913 time too small
+8 107105954 time too small
+8 107120617 time too small
+8 107136714 time too big
+8 107152158 time too small
+B555
+8 107154215 245.99
+8 107156325 time too small
+8 107165346 time too small
+8 107190597 time too small
+8 107192805 time too small
+8 107249296 time too small
+8 107251834 time too small
+8 107255612 time too small
+8 107282138 time too small
+8 107376478 time too small
+8 107391590 time too small
+8 107595215 time too small
+8 107599082 time too small
+8 107630033 time too small
+8 107686245 time too small
+B555
+8 107701761 375.6
+8 107711628 time too small
+8 107756824 time too small
+8 107761451 time too small
+8 107867985 time too small
+8 107883072 time too big
+B555
+8 107905819 185.76
+8 107914006 time too big
+8 107920239 time too small
+8 107930564 time too small
+8 107935765 time too small
+8 107953767 time too small
+8 108015865 time too small
+8 108104976 time too small
+8 108125310 time too small
+8 108129746 time too big
+8 108176763 time too small
+8 108219627 time too small
+8 108227103 time too small
+8 108236570 time too big
+8 108249713 time too small
+8 108250813 time too small
+8 108250900 time too small
+8 108286123 time too small
+8 108291843 time too small
+8 108426378 time too small
+8 108437356 time too small
+8 108459117 time too small
+8 108478020 time too small
+8 108495854 time too small
+B555
+8 108914564 177.5
+B555
+8 109113598 184.8
+B555
+8 110694322 199.1
+B555
+8 113287349 222.5
+B555
+8 113460307 172.3
+B555
+8 113580420 178.4
+B555
+8 113634402 191.7
+B555
+8 114554233 164.4
+B555
+8 114600181 156.9
+B555
+8 114650203 223.7
+8 114813171 time too small
+8 114838051 time too small
+8 114884372 time too small
+8 114901122 time too small
+8 114913283 time too small
+8 114918140 time too small
+8 115114400 time too small
+8 115128613 time too small
+8 115130858 time too small
+8 115134219 time too big
+8 115169497 time too small
+8 115200379 time too small
+8 115249751 time too small
+8 115322798 time too small
+8 115385882 time too small
+8 115478408 time too small
+8 115521939 time too small
+8 115551388 time too big
+8 115553662 time too small
+8 115556496 time too small
+8 115564064 time too small
+8 115565201 time too small
+8 115613232 time too small
+8 115621798 time too small
+8 115642091 time too small
+8 115655652 time too small
+file 8processed 1330715
+file 9processed 1498056
+file 10processed 1693520
+file 11processed 1845139
+file 12processed 2012027
+err1: 3438.0,err2: 3832010.0, err3:8849077.0, errr4:4.282452E7, errt:3633.0
+
+C:\Users\pranav\Desktop\course2\proj\trip_data_2.csv>pause
+Press any key to continue . . .
+
+B555: 15 => excessive distance (>150 miles)
+ttb: 25 => excessive time duration (>15k seconds)
+tts: 115 => negative time
+all in file 7. This file is particularly suspect...
